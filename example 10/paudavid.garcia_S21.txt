@@ -1,0 +1,24 @@
+
+//&&1
+match (p1:Person)-[:PARTY_TO]->(c1:Crime)-[:OCCURRED_AT]->(l:Location)<-[:OCCURRED_AT]-(c2:Crime)<-[:PARTY_TO]-(p2:Person)
+where c1.type = "Vehicle crime" and c2.type = "Vehicle crime" and p1<>p2
+return p1, p2
+
+
+//&&2
+match (padre:Person)-[f1:FAMILY_REL]->(hijo1:Person), 
+(padre)-[f2:FAMILY_REL]->(hijo2:Person), 
+(hijo1)-[f3:FAMILY_REL]->(hijo2), 
+(padre)-[:PARTY_TO]->(c1:Crime), 
+(hijo1)-[:PARTY_TO]->(c2:Crime), 
+(hijo2)-[:PARTY_TO]->(c3:Crime)
+WHERE f1.rel_type = "PARENT" AND f2.rel_type = "PARENT" AND f3.rel_type = "SIBLING"
+RETURN padre, hijo1, hijo2
+
+//&&3
+match (pe:Person)-[:CURRENT_ADDRESS]->(:Location)-[:LOCATION_IN_AREA]->(:Area)<-[:LOCATION_IN_AREA]-(:Location)<-[:OCCURRED_AT]-(:Crime)<-[:PARTY_TO]-(:Person)-[:KNOWS]->(:Person)-[:KNOWS]->(pe:Person)
+return pe
+
+//&&4
+match (:Crime)<-[:PARTY_TO]-(p1:Person)<-[:FAMILY_REL]-(p2:Person)-[:KNOWS_PHONE]->(p3:Person)-[:PARTY_TO]->(:Crime)
+return p3, p2

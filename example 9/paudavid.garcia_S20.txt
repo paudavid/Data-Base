@@ -1,0 +1,62 @@
+//&&1
+Create (albert:persona{nom:"albert", edat:23})
+create (anna:persona{nom:"anna", edat:24})
+create (laia:persona{nom:"laia", edat:22})
+create (marta:persona{nom:"marta", edat:21})
+create (jordi:persona{nom:"jordi", edat:24})
+create (jordi2:persona{nom:"jordi", edat:21})
+create (maria:persona{nom:"maria", edat:20})
+create (ferran:persona{nom:"ferran", edat: 25})
+create (databases:subject{nom:"databases"})
+create (dpoo:subject{nom:"dpoo"})
+create (albert)-[:Amic]->(anna),(anna)-[:Amic]->(albert)
+create (albert)-[:Amic]->(laia),(laia)-[:Amic]->(albert)
+create (albert)-[:Study]->(databases)
+create (marta)-[:Amic]->(jordi),(jordi)-[:Amic]->(marta)
+create (jordi)-[:Amic]->(jordi2),(jordi2)-[:Amic]->(jordi)
+create (jordi)-[:Amic]->(maria),(maria)-[:Amic]->(jordi)
+create (maria)-[:Amic]->(ferran),(ferran)-[:Amic]->(maria)
+create (anna)-[:Amic]->(jordi2),(jordi2)-[:Amic]->(anna)
+create (laia)-[:Study]->(databases)
+create (anna)-[:Study]->(databases)
+create (jordi2)-[:Study]->(databases)
+create (maria)-[:Study]->(databases)
+create (marta)-[:Study]->(databases)
+create (ferran)-[:Study]->(dpoo)
+create (jordi2)-[:Study]->(dpoo)
+create (laia)-[:Study]->(dpoo)
+
+
+
+//&&2
+match (p:persona) where p.edat>22 return p
+
+
+//&&3
+match(p:persona)-[rel:Study]->(s:subject) where p.edat>22 and s.nom="databases" return p, s
+
+
+//&&4
+match(p:persona)-[:Amic]->(d:persona)-[:Study]->(s:subject)
+where (p.nom='jordi') AND p.edat=24 AND s.nom='databases'
+return d
+
+
+//&&5
+match (su:subject)<-[:Study]-(p:persona)-[:Amic]->(d:persona)-[:Study]->(s:subject)
+where d.nom starts with "a"
+RETURN d,s
+
+
+//&&6
+match(p:persona)-[:Amic]->(d:persona)
+where (d.nom = 'laia')
+return p as nombre
+UNION
+match (d:persona)-[:Study]->(se:subject)<-[:Study]-(r:persona)
+where (d.nom = 'laia')
+return r as nombre
+
+
+
+
